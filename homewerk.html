@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homework</title>
+</head>
+<body>
+
+<h1>HOMEWORK</h1>
+<br />
+<ul id="myUL"><li>Первый элемент</li><li>Второй элемент</li><li>Третий элемент</li><li>Четвертый элемент</li><li>Пятый элемент</li></ul>
+<form>
+    Введите текст, который будет добавлен или заменен в элементе: 
+    <input type="text" id="myinput" name="input" size="30" /><br /><br />
+	<input type="button" value="Добавить элемент в начало" onclick="insert(this.form)" />
+	<input type="button" value="Добавить элемент" onclick="append(this.form)" />
+	<input type="button" value="Выбрать первый элемент" onclick="first(this.form)" />
+	<input type="button" value="Выбрать последний элемент" onclick="last(this.form)" />
+    <input type="button" value="Выбрать следующий элемент" onclick="next(this.form)" />
+	<input type="button" value="Выбрать предыдущий элемент" onclick="prev(this.form)" />
+	<input type="button" value="Удалить элемент" onclick="remove(this.form)" />
+</form>
+
+<style>
+.active {
+color: yellow;
+}
+
+body h1 {
+text-align: center;
+}
+
+body li {
+font-size: 25px; 
+}
+
+input[type=button] {
+height: 40px;
+}
+</style>
+
+<script>
+        function append(form) {
+            if (form.input.value) {
+                var newItem = document.createElement("li");
+                newItem.innerHTML = form.input.value;
+                console.log(newItem);
+                document.getElementById('myUL').appendChild(newItem);
+            }
+        }
+		
+		function insert(form) {
+            if (form.input.value) {
+                var newItem = document.createElement('li');
+                newItem.innerHTML = form.input.value;
+                console.log(newItem);
+                document.getElementById('myUL').insertBefore(newItem, myUL.firstChild);
+            }
+        }
+		
+		function remove(form) {
+			var remForm = document.getElementById('myUL'),
+				item = remForm.lastElementChild;
+			if (item != null) {
+				remForm.removeChild(remForm.lastElementChild);
+			} else {
+				alert("Удалять больше нечего. Сначала добавьте элементы");
+			}
+        }
+		
+		function first() {
+		    var item = document.getElementById('myUL');
+			var firstList = item.firstElementChild;
+				firstList.classList.add('active');
+				removeClassActive();
+		}
+		
+		function last() {
+		    var item = document.getElementById('myUL');
+			var lastList = item.lastElementChild;
+				lastList.classList.add('active');
+				removeClassActive();
+		}
+		
+		function removeClassActive() {
+			var item = document.getElementById('myUL');
+			for (var i = 0; i < item.length; i++) {
+				item[i].classList.remove('active'); 
+			}
+		}
+		
+		function next() {
+			var findId = document.getElementById('myUL'),
+				findLiActive = findId.getElementsByClassName('active'),
+				findLi = findId.getElementsByTagName('li'); 
+
+			if (findLiActive.length !=0) {
+				addClassActive();
+			} else {
+				removeClassActive(); 
+				findId.firstElementChild.classList.add('active');
+			} 
+
+			function addClassActive() {
+				for (var i = 0; findLi.length> i ; i++) {
+					if (findLi[i].classList.contains('active')) {
+					child = findLi[i];
+					} 
+				} 
+				if (findId.lastElementChild.classList.contains('active')) {
+					removeClassActive(); 
+					findId.firstElementChild.classList.add('active');
+				} else {
+					removeClassActive(); 
+					child = child.nextElementSibling.classList.add('active');
+				}   
+			}
+	
+			function removeClassActive() {
+				var findId = document.getElementById('myUL');
+				for (var i = 0; i < findId.children.length; i++) {
+					findId.children[i].classList.remove('active'); 
+				}
+			}
+		}
+
+        function prev() {
+			var findId = document.getElementById('myUL'),
+				findLiActive = findId.getElementsByClassName('active'),
+				findLi = findId.getElementsByTagName('li');
+				
+			function addClassActive () {
+				if (findId.firstElementChild.classList.contains('active')) {
+					removeClassActive(); 
+					findId.lastElementChild.classList.add('active');
+				} else {
+				removeClassActive(); 
+				child = child.previousElementSibling.classList.add('active');
+				}   
+			}
+			if (findLiActive.length !=0) {
+				for (var i = 0; findLi.length> i ; i++) {
+					if (findLi[i].classList.contains('active')) {
+						child = findLi[i];
+					} 
+				} 
+				addClassActive();
+			} else {
+				removeClassActive(); 
+				findId.lastElementChild.classList.add('active');
+			} 
+			
+			function removeClassActive() {
+				var findId = document.getElementById('myUL');
+				for (var i = 0; i < findId.children.length; i++) {
+					findId.children[i].classList.remove('active'); 
+				}
+			}
+		}
+</script>
+</body>
+</html>
