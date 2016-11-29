@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Slider</title>
+    <style type="text/css">
+        .block {
+            width: 200px;
+            height: 200px;
+        }
+		.block img{
+			width: 200px;
+			height: 200px;
+		}
+        .item {
+            overflow: hidden;
+			margin-left: 20px;
+        }
+        .newItem {
+			white-space: nowrap;
+        }
+        img {
+            width: 50px;
+            height: 50px;
+			display: inline-block;
+        }
+		.buttons {
+			position: absolute;
+			top: 280px;
+			left: 50px;
+		}
+		.active {
+			opacity: 0.50;
+		}
+    </style>
+
+</head>
+<body>
+	<div class="block"></div>
+	<div class="item">
+		<div class="newItem">
+			<img src="Toronto_Maple_Leafs.gif"/>
+			<img class="active" src="san-hose-sharks-big.gif"/>
+			<img src="mhxgvflhf0rnrne14idmht4fl.gif"/>
+			<img src="Cincinnati_mighty_ducks.png"/>
+			<img src="Anaheim-Ducks-Nhl.jpg"/>
+		</div>
+	</div>
+
+	<div class="buttons">
+		<button data-id="prev">Previous</button>
+		<button data-id="next">Next</button>
+	</div>
+
+	<script type="text/javascript">
+
+    function Slider(n) { 
+        this.block = document.querySelector('.block');
+		this.block.insertAdjacentHTML('beforeEnd','<img src="san-hose-sharks-big.gif"/>');
+        this.item = document.querySelector('.item');
+		this.newItem = document.querySelector('.newItem'); 
+		this.findImgActive = this.newItem.querySelector('.active');
+		this.findImgPreview = this.newItem.querySelector('.preview');
+		this.findImg = this.newItem.querySelectorAll('img');
+		this.buttons = document.querySelector('.buttons');
+		this.width = this.newItem.firstElementChild.clientWidth;
+		this.count = this.newItem.children.length; 	
+		this.allWidth = this.width * (this.count + 1);	
+		this.showElCount = n;
+		this.item.style.width = (this.width * this.showElCount) + 'px';
+        this.newItem.addEventListener('click', this.generateSlider.bind(this));
+		this.buttons.addEventListener('click', this.buttonMuveNext.bind(this));
+		this.buttons.addEventListener('click', this.buttonMuvePrev.bind(this));
+		//console.log (this.findImg.length);
+	}
+
+    Slider.prototype.generateSlider = function(){
+		for (var i = 0; i < this.findImg.length; i++){
+			if (this.findImg[i].classList.contains('active')) {
+				this.findImg[i].classList.remove('active');
+			}
+		}
+		var event = event || window.event,
+			target = event && event.target || srcElement,
+			mySrc = target.getAttribute('src');
+		if (!mySrc) return;
+		target.classList.add ('active');
+		this.element(mySrc);
+	}	
+		
+	Slider.prototype.buttonMuveNext = function(){
+		var target = event && event.target || srcElement,
+            attr = target.getAttribute('data-id'),
+			child;
+		if (attr == 'next') {
+			this.newItem.insertBefore(this.newItem.children[0], this.newItem.children[this.findImg.length-1].nextElementSibling);
+			for (var i = 0; this.findImg.length > i ; i++) {
+				if (this.findImg[i].classList.contains('active')) {
+					child = this.findImg[i];
+					if (child.nextElementSibling){
+						this.element(child.nextElementSibling.getAttribute('src'));
+					}else{
+						this.element(this.newItem.firstElementChild.getAttribute('src'));
+					}
+				} 
+			} 
+			if (this.newItem.lastElementChild.classList.contains('active')) {
+				for (var i = 0; i < this.newItem.children.length; i++) {
+					this.newItem.children[i].classList.remove('active');
+				}
+				this.newItem.firstElementChild.classList.add('active');
+			}else{
+				for (var i = 0; i < this.newItem.children.length; i++) {
+					this.newItem.children[i].classList.remove('active');
+				} 
+				child = child.nextElementSibling.classList.add('active');
+			}
+        }
+	}	
+		
+	Slider.prototype.buttonMuvePrev = function(){
+		var target = event && event.target || srcElement,
+            attr = target.getAttribute('data-id'),
+			child;
+		if (attr == 'prev') {
+		this.newItem.insertBefore(this.newItem.children[this.findImg.length-1], this.newItem.children[0]);
+			for (var i = 0; this.findImg.length > i ; i++) {
+			this.newItem.appendChild(this.newItem.children[0]);
+				if (this.findImg[i].classList.contains('active')) {
+					child = this.findImg[i];
+					console.log (child);
+					if (child.previousElementSibling){
+						this.element(child.previousElementSibling.getAttribute('src'));
+					}else{
+						this.element(this.newItem.lastElementChild.getAttribute('src'));
+					}
+				} 
+			} 
+			if (this.newItem.firstElementChild.classList.contains('active')) {
+				for (var i = 0; i < this.newItem.children.length; i++) {
+					this.newItem.children[i].classList.remove('active');
+				} 
+				this.newItem.lastElementChild.classList.add('active');
+			}else{
+				for (var i = 0; i < this.newItem.children.length; i++) {
+					this.newItem.children[i].classList.remove('active');
+				} 
+				child = child.previousElementSibling.classList.add('active');
+			}   
+		}
+    }
+	
+	Slider.prototype.element = function(target) {
+		if (this.block.firstElementChild){
+			this.block.removeChild(this.block.firstElementChild);
+		}
+		this.block.insertAdjacentHTML('beforeEnd','<img src=\"'+ target + '\" alt="Картинка">');
+	}
+	
+	new Slider(3);
+	
+	</script>
+</body>
+</html>
